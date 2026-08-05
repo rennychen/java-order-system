@@ -2,12 +2,12 @@ package com.github.renny.order.system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
-public class Application {
-
+@EnableJpaAuditing
+public class OrderSystemApplication {
 	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
+        SpringApplication.run(OrderSystemApplication.class, args);
 	}
-
 }

@@ -1,10 +1,13 @@
 package com.github.renny.order.system.common.exception;
 
 import com.github.renny.order.system.common.response.ApiResponse;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +33,15 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining(","));
         return ResponseEntity.badRequest().body(ApiResponse.error("格式錯誤," +errorMessage));
+    }
+
+    @ExceptionHandler({
+            ObjectOptimisticLockingFailureException.class,
+            OptimisticLockException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleOptimisticLockException(Exception e){
+        log.warn("資料衝突,{}",e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error("資料已被修改，請重新整理"));
     }
 
     @ExceptionHandler(Exception.class)
