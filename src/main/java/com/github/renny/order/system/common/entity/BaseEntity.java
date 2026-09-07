@@ -28,4 +28,6 @@ public abstract class BaseEntity {
     public LocalDateTime getCreatedAt(){ return createdAt; }
     public LocalDateTime getUpdatedAt(){ return updatedAt; }
     public boolean isDeleted(){ return isDeleted; }
+
+    public void markAsDelete(){ this.isDeleted = true; }
 }
