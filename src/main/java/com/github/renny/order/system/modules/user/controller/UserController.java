@@ -64,8 +64,8 @@ public class UserController {
     )
     @PatchMapping("/{id}/password")
     public ResponseEntity<ApiResponse<Void>> updateUserPassword(@PathVariable Long id,
-                                                                @PathVariable String orderNum){
-        userService.updateUserPassword(id,orderNum);
+                                                                @Valid @RequestBody UpdateUserPasswordRequest request){
+        userService.updateUserPassword(id,request);
         return ResponseEntity.ok(ApiResponse.success("更改密碼成功,請重新登入",null));
     }
 

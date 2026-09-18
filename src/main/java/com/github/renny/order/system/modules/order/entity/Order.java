@@ -2,6 +2,7 @@ package com.github.renny.order.system.modules.order.entity;
 
 import com.github.renny.order.system.common.entity.BaseEntity;
 import com.github.renny.order.system.modules.order.enums.OrderStatus;
+import com.github.renny.order.system.modules.orderitem.entity.OrderItem;
 import com.github.renny.order.system.modules.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,9 +14,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "orders" )
@@ -27,8 +32,8 @@ public class Order extends BaseEntity{
     private String orderName;
     @Column( nullable = false, unique = true )
     private String orderNum;
-    @Column( nullable = false )
-    private int totalAmount;
+    @Column( nullable = false,precision = 12,scale = 2)
+    private BigDecimal totalAmount;
     @Version
     private Long version;
     @Column( nullable = false )
@@ -37,10 +42,12 @@ public class Order extends BaseEntity{
     @ManyToOne( fetch = FetchType.LAZY )
     @JoinColumn( name = "user_id", nullable = false )
     private User user;
+    @OneToMany( mappedBy = "order_item")
+    private List<OrderItem> orderItems;
 
     protected Order(){};
 
-    public Order(String orderName,int totalAmount,User user){
+    public Order(String orderName,BigDecimal totalAmount,User user){
         this.orderName = orderName;
         this.totalAmount = totalAmount;
         this.user = user;
@@ -56,14 +63,14 @@ public class Order extends BaseEntity{
     public Long getId(){ return id; }
     public String getOrderName(){ return orderName; }
     public String getOrderNum(){ return orderNum; }
-    public int getTotalAmount(){ return totalAmount; }
+    public BigDecimal getTotalAmount(){ return totalAmount; }
     public OrderStatus getOrderStatus(){ return orderStatus; }
     public User getUser(){ return user; }
 
     public void updateOrderName(String orderName){
         this.orderName = orderName;
     }
-    public void modifyAmount(int totalAmount){
+    public void modifyAmount(BigDecimal totalAmount){
         this.totalAmount = totalAmount;
     }
     public void changeOrderStatus(OrderStatus orderStatus){
