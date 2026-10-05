@@ -1,7 +1,6 @@
-package com.github.renny.order.system.modules.orderitem.entity;
+package com.github.renny.order.system.modules.order.entity;
 
 import com.github.renny.order.system.common.entity.BaseEntity;
-import com.github.renny.order.system.modules.order.entity.Order;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,17 +26,16 @@ public class OrderItem extends BaseEntity {
     @Column( nullable = false,precision = 10,scale = 2)
     private BigDecimal price;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     protected OrderItem(){}
 
-    public OrderItem(String productName,String description,int quantity,BigDecimal price,Order order){
+    public OrderItem(String productName,String description,int quantity,BigDecimal price){
         this.productName = productName;
         this.description = description;
         this.quantity = quantity;
         this.price = price;
-        this.order = order;
     }
 
     public Long getId(){ return id; }
@@ -59,4 +57,11 @@ public class OrderItem extends BaseEntity {
     public void changePrice(BigDecimal price){
         this.price = price;
     }
+    void setOrder(Order order){
+        this.order = order;
+    }
+    public BigDecimal getSubtotal(){
+        return price.multiply(BigDecimal.valueOf(quantity));
+    }
+
 }

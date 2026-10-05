@@ -39,7 +39,6 @@ public class OrderController {
     }
 
     /*  TODO: token解析id未上
-     *   createOrder() totalAmount暫時由DTO進
      */
     @Operation(
             summary = "建立訂單",

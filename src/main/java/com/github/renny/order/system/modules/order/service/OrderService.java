@@ -3,11 +3,13 @@ package com.github.renny.order.system.modules.order.service;
 import com.github.renny.order.system.common.exception.InvalidStatusTransitionException;
 import com.github.renny.order.system.common.exception.ResourceNotFoundException;
 import com.github.renny.order.system.modules.order.dto.request.CreateOrderRequest;
+import com.github.renny.order.system.modules.order.dto.request.OrderItemRequest;
 import com.github.renny.order.system.modules.order.dto.request.UpdateOrderStatusRequest;
 import com.github.renny.order.system.modules.order.dto.response.CreatedOrderResponse;
 import com.github.renny.order.system.modules.order.dto.response.ReadOrderResponse;
 import com.github.renny.order.system.modules.order.dto.response.UpdateOrderStatusResponse;
 import com.github.renny.order.system.modules.order.entity.Order;
+import com.github.renny.order.system.modules.order.entity.OrderItem;
 import com.github.renny.order.system.modules.order.enums.OrderStatus;
 import com.github.renny.order.system.modules.order.repository.OrderRepository;
 import com.github.renny.order.system.modules.user.entity.User;
@@ -36,7 +38,17 @@ public class OrderService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("找不到該用戶"));
 
-        Order order = new Order(request.getOrderName(),request.getOrderAmount(),user);
+        Order order = new Order(request.getOrderName(),user);
+        for(OrderItemRequest itemDto: request.getItems()){
+            OrderItem item = new OrderItem(
+                    itemDto.getProductName(),
+                    itemDto.getDescription(),
+                    itemDto.getQuantity(),
+                    itemDto.getPrice()
+            );
+            order.addOrderItem(item);
+        }
+        order.calculateTotalAmount();
         Order saveOrder = orderRepository.save(order);
         log.info("訂單建立成功,orderNum: {}",saveOrder.getOrderNum());
         return new CreatedOrderResponse(

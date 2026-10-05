@@ -1,28 +1,22 @@
 package com.github.renny.order.system.modules.order.dto.request;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class CreateOrderRequest {
     @NotBlank(message = "訂單名稱不得為空")
     private String orderName;
-    @Schema(
-            description = "訂單金額",
-            example = "1500"
-    )
-    @DecimalMin(value = "0",inclusive = false,message = "金額需大於0")
-    private BigDecimal orderAmount;
+    @NotEmpty(message = "訂單清單不得為空")
+    private List<OrderItemRequest> items;
 
     public String getOrderName(){ return orderName; }
-    public BigDecimal getOrderAmount(){ return orderAmount; }
+    public List<OrderItemRequest> getItems() { return items; }
 
     public void setOrderName(String orderName){
         this.orderName = orderName;
     }
-    public void setOrderAmount(BigDecimal orderAmount){
-        this.orderAmount = orderAmount;
-    }
+    public void setItems(List<OrderItemRequest> items){ this.items = items; }
 }
