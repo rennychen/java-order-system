@@ -1,6 +1,7 @@
 package com.github.renny.order.system.modules.order.entity;
 
 import com.github.renny.order.system.common.entity.BaseEntity;
+import com.github.renny.order.system.common.exception.BusinessException;
 import com.github.renny.order.system.modules.order.enums.OrderStatus;
 import com.github.renny.order.system.modules.user.entity.User;
 import jakarta.persistence.CascadeType;
@@ -78,7 +79,10 @@ public class Order extends BaseEntity{
     public OrderStatus getOrderStatus(){ return orderStatus; }
     public User getUser(){ return user; }
 
-    public void updateOrderName(String orderName){
+    public void changeOrderName(String orderName){
+        if(orderName == null || orderName.isEmpty()){
+            throw new IllegalArgumentException("訂單名稱不能為空");
+        }
         this.orderName = orderName;
     }
     public void changeOrderStatus(OrderStatus orderStatus){

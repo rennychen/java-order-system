@@ -44,6 +44,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponse.error("資料已被修改，請重新整理"));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Void>> handleIllegaArgumentException(IllegalArgumentException e){
+        log.warn("觸發實體類別業務機制,{}",e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("格式錯誤,請重新嘗試"));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleAll(Exception e){
         log.error("發生非預期例外: {} | 詳細如下" ,e.toString(), e);
