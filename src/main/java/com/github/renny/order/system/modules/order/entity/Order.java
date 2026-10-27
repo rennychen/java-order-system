@@ -88,4 +88,5 @@ public class Order extends BaseEntity{
     public void changeOrderStatus(OrderStatus orderStatus){
         this.orderStatus = orderStatus;
     }
+    // TODO: refactor status--判斷式移到這
 }
